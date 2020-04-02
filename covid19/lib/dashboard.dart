@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'LiveData.dart';
+import 'contactForm.dart';
+
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -206,7 +209,7 @@ class _DashboardState extends State<Dashboard> {
               color: Colors.redAccent.shade200,
               child: InkWell(
                 onTap: () {
-                  // Navigator.of(context).push(MaterialPageRoute(builder: (context) => Wallet()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => LiveData()));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -224,6 +227,55 @@ class _DashboardState extends State<Dashboard> {
                         Expanded(
                           child: Text(
                             "Victim",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.redAccent.shade700,
+                                fontSize: 20),
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle: Center(
+                        child: Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: Text("4",
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          )),
+                    )),
+                  ),
+                ),
+              )),
+        ),
+        Opacity(
+          opacity: 0.8,
+          child: Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              color: Colors.redAccent.shade200,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ContactForm()));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(
+                          FontAwesomeIcons.wallet,
+                          size: 15,
+                          color: Colors.redAccent.shade700,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Text(
+                            "Contact",
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Colors.redAccent.shade700,

@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'dashboard.dart';
 
 void main() {
@@ -33,10 +32,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Firestore _firestore = Firestore();
+  GlobalKey<FormState> _key = GlobalKey<FormState>();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   Widget emailField() {
     return TextFormField(
+      controller: email,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.all(5),
           border: OutlineInputBorder(),
@@ -47,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget pwdField() {
     return TextFormField(
+      controller: password,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.all(5),
           border: OutlineInputBorder(),
@@ -57,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget signinForm() {
     return Form(
+      key: _key,
       child: Column(
         children: <Widget>[
           emailField(),
@@ -110,33 +114,46 @@ class _MyHomePageState extends State<MyHomePage> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<FirebaseUser> _handleSignIn() async {
-    print("hello");
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+  // *
+  // Future<FirebaseUser> _handleSignIn() async {
+  //   print("hello");
+  //   final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+  //   final GoogleSignInAuthentication googleAuth =
+  //       await googleUser.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+  //   final AuthCredential credential = GoogleAuthProvider.getCredential(
+  //     accessToken: googleAuth.accessToken,
+  //     idToken: googleAuth.idToken,
+  //   );
 
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
-    print("signed in " + user.displayName);
-    return user;
-  }
+  //   final FirebaseUser user =
+  //       (await _auth.signInWithCredential(credential)).user;
+  //   print("signed in " + user.displayName);
+  //   return user;
+  // }
 
+  // * sign in with email and password
   void _signInWithEmailAndPassword() async {
     final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
-      email: "sangamsky10@gmail.com",
-      password: "bigbang123456789",
-    )).user;
+      email: "hikresky10@gmail.com",
+      password: "dharan",
+    ))
+        .user;
     if (user != null) {
       print(user.email);
     } else {
       print("something went wrong");
     }
+  }
+
+  login(String email, String password) async {
+    await _auth
+        .signInWithEmailAndPassword(email: email, password: password)
+        .whenComplete(() {
+          Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Dashboard()));
+
+        });
   }
 
   @override
@@ -184,9 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       MaterialButton(
                         color: Colors.redAccent,
                         onPressed: () {
-                          
                           _signInWithEmailAndPassword();
-                          _handleSignIn();
                         },
                         child: Text(
                           "Google Sign In",
@@ -204,3 +219,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+// GlobalKey<FormState> _key = GlobalKey<FormState>();
+// TextEditingController email = TextEditingController();
+// TextEditingController password = TextEditingController();
+// FirebaseAuth auth = FirebaseAuth.instance;
+
+// login(String email, String password) async {
+//   await auth
+//       .signInWithEmailAndPassword(email: email, password: password)
+//       .whenComplete(() => Navigator.pushReplacement(
+//           context, MaterialPageRoute(builder: (context) => Dashboard())));
+// }
